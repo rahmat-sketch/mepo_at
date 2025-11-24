@@ -17,7 +17,7 @@ import { delay } from "./utils/delay";
   await page.goto("https://demoqa.com/text-box", { waitUntil: "networkidle2" });
 
   await delay(1000);
-  await page.type("#userName", "John Doe");
+  await page.type("#userName", "Rahmat");
   await page.type("#userEmail", "john@example.com");
   await page.type("#currentAddress", "123 Street");
   await page.type("#permanentAddress", "456 City");
