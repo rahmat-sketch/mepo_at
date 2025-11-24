@@ -1,10 +1,14 @@
-name: CI 
+name: CI
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches:
+      - main
+      - dev
   pull_request:
-    branches: [ "main", "dev" ]
+    branches:
+      - main
+      - dev
 
 jobs:
   build:
@@ -12,9 +16,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Install Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -22,9 +26,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests (opsional)
-        if: ${{ always() }}
-        run: npm test || echo "No tests available"
-
-      - name: Build project (opsional)
-        run: npm run build || echo "No build script"
+      - name: Run build
+        run: npm run build
