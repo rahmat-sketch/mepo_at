@@ -2,52 +2,52 @@ name: CI Pipeline
 
 on:
   push:
-    branches:
-      - dev
-      - main
+    branches: [main, dev]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build:
+  lint-commit:
+    name: Commit Message Lint
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Run Commitlint
+        uses: wagoid/commitlint-github-action@v5
+
+  install-deps:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    needs: lint-commit
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: 18
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Run Tests
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: install-deps
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
         run: npm test
-
-  release:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Semantic Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
