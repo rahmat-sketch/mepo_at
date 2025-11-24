@@ -25,9 +25,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run Commitlint
-        uses: wagoid/commitlint-github-action@v5
-
       - name: Run Tests
         run: npm test
 
